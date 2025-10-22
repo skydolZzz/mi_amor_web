@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Para mi amor 💞</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="title">💖 Tres meses contigo 💖</h1>
+      <p class="subtitle">Un jardín lleno de amor, recuerdos y promesas 🌸</p>
+
+      <div id="garden" class="garden"></div>
+      <p class="footer">Hecho con amor, solo para ti 💌</p>
+    </div>
+
+    <div id="hearts"></div>
+
+    <script>
+      fetch('/api/garden')
+        .then(res => res.json())
+        .then(data => {
+          const garden = document.getElementById('garden');
+          (data.flowers || []).forEach((flower, i) => {
+            const petal = document.createElement('div');
+            petal.className = 'flower';
+            petal.innerHTML = `<div class="flower-inner">
+                <h3>${flower.title}</h3>
+                <p>${flower.message.replace(/\n/g,'<br>')}</p>
+              </div>`;
+            petal.style.animationDelay = `${i * 0.25}s`;
+            garden.appendChild(petal);
+          });
+        });
+
+      function createHeart() {
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        heart.style.left = (Math.random() * 90) + 'vw';
+        heart.style.fontSize = (12 + Math.random() * 22) + 'px';
+        heart.style.animationDuration = (3 + Math.random() * 3) + 's';
+        heart.innerText = '💖';
+        document.getElementById('hearts').appendChild(heart);
+        setTimeout(() => heart.remove(), 7000);
+      }
+      setInterval(createHeart, 600);
+    </script>
+  </body>
+</html>
